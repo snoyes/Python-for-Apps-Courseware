@@ -1,0 +1,184 @@
+Let's make a text library that can tell us interesting things about
+articles, essays, novels, and other bodies of texts. For reference,
+you can refer to the "Automated Testing and TDD" chapter in
+PythonForLargeApps.pdf, and also the official unittest documentation:
+
+https://docs.python.org/3/library/unittest.html
+
+Now, in your labs folder, you have a file named "testing/textlib.py":
+
+----
+class BodyOfText:
+    def __init__(self, text):
+        self.text = text
+    def num_paragraphs(self):
+        return -1
+    def paragraphs(self):
+        return []
+----
+
+Your labs folder also has a file named "testing/test_textlib.py" containing this:
+
+----
+import unittest
+from textlib import BodyOfText
+
+class TestBodyOfText(unittest.TestCase):
+    def test_empty_story(self):
+        pass
+----
+
+Run the test using the following:
+
+----
+python2.7 -m unittest test_textlib
+----
+
+When you do this, you should see the following output:
+
+----
+.
+--------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+----
+
+When you have this, go on to the next step.
+
+
+# STEP 2
+
+Let's make our code count paragraphs. We'll define the boundary
+between two paragraphs as a blank line - in other words, two newlines
+in a row. (Peek in "testing/story.txt" for an example.)
+
+In "test_textlib.py", modify the "TestBodyOfText" class to do the following:
+
+ * In "test_empty_story", create a BodyOfText instance with an empty
+   string, and assert that its "num_paragraphs" method returns zero.
+
+ * Add a method named "test_single_paragraph". Within it, create a
+   BodyOfText instance for a single paragraph (i.e., a string with no
+   blank lines, as described above). A single sentence will do fine.
+   Assert that ".num_paragraphs()" returns 1.
+
+* Create a test string with at least three paragraphs (see example
+  below). Add a function named "test_several_paragraphs", which
+  creates a "BodyOfText" instance using that test string, then asserts
+  that ".num_paragraphs()" returns the correct number.
+
+Very important: You are NOT modifying "textlib.py" yet. Only
+"test_textlib.py".
+
+For your test with several paragraphs, remember the boundary between
+paragraphs is a blank line. So you might do something like:
+
+----
+# Remember, in Python, a pair of triple quotes demarcates
+# a multi-line string.
+three_paragraph_story = """This is a rather short story. It has three paragraphs.
+
+Once upon a time, a brave princess went on a dangerous journey. She
+had many adventures, and recruited other heros to her important and
+noble cause.
+
+She prevailed, saving the day, and made it home. Yay!"""
+----
+
+(Alternatively, you can have your test code read in the content of
+"story.txt".)
+
+Run the test (using "python2.7 -m unittest test_textlib"). You should
+see something similar to the following:
+
+----
+% python2.7 -m unittest test_textlib
+FFF
+================================================================
+FAIL: test_empty_story (test_textlib.TestBodyOfText)
+----------------------------------------------------------------
+Traceback (most recent call last):
+  File "labs/testing/test_textlib.py", line 7, in test_empty_story
+    self.assertEqual(0, body.num_paragraphs())
+AssertionError: 0 != -1
+
+================================================================
+FAIL: test_several_paragarphs (test_textlib.TestBodyOfText)
+----------------------------------------------------------------
+Traceback (most recent call last):
+  File "labs/testing/test_textlib.py", line 16, in test_several_paragarphs
+    self.assertEqual(7, body.num_paragraphs())
+AssertionError: 7 != -1
+
+================================================================
+FAIL: test_single_paragraph (test_textlib.TestBodyOfText)
+----------------------------------------------------------------
+Traceback (most recent call last):
+  File "labs/testing/test_textlib.py", line 11, in test_single_paragraph
+    self.assertEqual(1, body.num_paragraphs())
+AssertionError: 1 != -1
+
+----------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (failures=3)
+----
+
+Yours may be a different in a couple of ways. Some line numbers may be
+different, and the lines starting with "assert" may look
+different too. But everything else should be the same, or close to it.
+
+Looking at your output, note that:
+
+ * You are shown the test module and test class.
+ * For each failing test, you are shown the test methods, and the line number.
+ * You are shown the expected and actual values, and how they differ.
+ * You wrote three different test functions, and are shown three different failures.
+
+Identify all these elements in your output:
+
+ * Where is the test module (test_textlib) specified?
+ * Where is the test class ("TestBodyOfText") specified?
+ * Where are the test methods (e.g., "test_empty_story") specified?
+ * Where are the line numbers of the failing tests?
+
+Once you have done all of this, proceed to the next step.
+
+
+# STEP 3
+
+Now it's finally time to write actual application code! Modify
+"textlib.py" to make the tests pass. Run them again with "python2.7 -m unittest test_textlib". You'll know when they pass by the following output:
+
+----
+% python2.7 -m unittest test_textlib
+...
+----------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+OK
+----
+
+Congratulations. You just did test-driven development!
+
+
+# EXTRA CREDIT
+
+Using test-driven development, add a method to "BodyOfText" called
+"paragraphs", which returns a list of strings: the paragraphs in the
+text body. The steps should go something like this:
+
+ * Add a stub method called "paragraphs" to "BodyOfText", which
+   returns an empty list.
+ * Add assertions to "test_empty_story", "test_single_paragraph", and
+   "test_several_paragraphs" that check for a correct return value
+   when this method is called.
+ * Run the test and observe that it fails like it should. This is the
+   first checkpoint, so to speak.
+ * Change "BodyOfText.paragraphs" so the tests now
+   pass. This will be the next checkpoint.
+ * Look at your code for the "num_paragraphs" and "paragraphs"
+   methods. Is there some way you can simplify your code? If so,
+   refactor - notice how you can use the tests to verify you didn't
+   introduce any new bugs!

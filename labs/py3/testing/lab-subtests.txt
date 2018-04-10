@@ -1,0 +1,69 @@
+Let's add a method to `BodyOfText` called `wordcounts`. `wordcounts`
+counts how many times each word occurs. The method returns a
+dictionary mapping the lower-cased word to the number of
+occurrences. Case and punctuation are ignored:
+
+----
+>>> body = BodyOfText("Truth is beauty; beauty, truth.")
+>>> body.wordcounts()
+{'truth': 2, 'is': 1, 'beauty': 2}
+----
+
+
+# STEP 1
+
+In `textlib.py`, add a stub for `wordcounts` to `BodyOfText`:
+
+----
+    def wordcounts(self):
+        return { }
+----
+
+Then in `test_textlib.py`, add the method
+`TestBodyOfText.test_wordcounts`. At the top, define a few
+input-output pairs. Something like this:
+
+----
+    def test_wordcounts(self):
+        testitems = [
+            {'text' : 'This is a sentence.',
+             'counts' : {'this': 1, 'is': 1, 'a': 1, 'sentence': 1},
+            },
+            {'text': 'Truth is beauty; beauty, truth.',
+             'counts': {'truth': 2, 'beauty': 2, 'is': 1},
+             },
+            {'text': 'I could finally SEE. But what I could see, remained a mystery.',
+             'counts': {'i': 2, 'could': 2, 'finally': 1, 'see': 2,
+                        'but': 1, 'what': 1, 'remained': 1, 'a': 1, 'mystery': 1},
+             },
+	     # These are examples. You can add more, and/or come up
+	     # with your own.
+----
+
+End the method with a loop using `self.subTest()`, to make assertions
+on all the test inputs. When you run the test, you should see
+something like this (repeated for each of your test items):
+
+----
+======================================================================
+FAIL: test_wordcounts (test_textlib.TestBodyOfText) (counts={'this': 1, 'is': 1, 'a': 1, 'sentence': 1}, text='This is a sentence.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "testing/test_textlib.py", line 35, in test_wordcounts
+    self.assertEqual(testitem['counts'], body.wordcounts())
+AssertionError: {'this': 1, 'is': 1, 'a': 1, 'sentence': 1} != {}
+- {'a': 1, 'is': 1, 'sentence': 1, 'this': 1}
++ {}
+----
+
+
+# STEP 2
+
+Implement `BodyOfText.wordcounts()` to make the tests pass.
+
+
+# EXTRA CREDIT
+
+Review the other tests you've written so far, either for the labs in
+this course, or (even better) some code of your own. Can any of them
+benefit from using subtests?

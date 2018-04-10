@@ -1,0 +1,129 @@
+Suppose you decide, because of some new requirements for "textlib",
+that "BodyOfText" must now reject an empty string as input. You want
+to ensure its constructor throws "ValueError" if invoked this way.
+
+
+# STEP 1
+
+In "test_textlib.py", modify "TestBodyOfText.test_empty_story()" to
+assert that "ValueError" is raised if "BodyOfText" is invoked with an
+empty string argument.
+
+Run the test, and see the test failures. When you do, go to the next step.
+
+
+# STEP 2
+
+Modify "textlib.py" so all tests pass.
+
+
+# STEP 3
+
+Let's extend "textlib" to add a class representing paragraphs. In the
+process, you'll gain insight in how valuable test-driven development
+is when refactoring.
+
+Add the following class stub to the top of "textlib.py":
+
+[source,python]
+----
+class Paragraph:
+    def __init__(self, text):
+        self.text = text
+    def num_sentences(self):
+        return -1
+----
+
+Notice that, just like "BodyOfText", this "Paragraph" class is a
+stub. For now, this is the ONLY change you're going to
+make to "textlib.py".
+
+Next, modify "test_textlib.py" in the following ways:
+
+ * Import your new "Paragraph" class.
+ * Create a new subclass of "unittest.TestCase", called "TestParagraph".
+ * In "TestParagraph", add a method "test_empty_paragraph" to
+   assert that "ValueError" is raised if "Paragraph" is invoked with an
+   empty string argument.
+
+* Create methods "test_single_sentence()" and "test_several_sentences()"
+  that check on a paragraph containing one sentence, and (at least)
+  three sentences, respectively.
+
+Run your tests, observing a meaningful failure for each of the new
+test functions. The key here is _meaningful_, meaning the failure
+indicates your application code is not (yet) working, as opposed to
+the test code itself not yet working. Suppose you saw the following:
+
+----
+ERROR: test_single_sentence (test_textlib.TestParagraph)
+----------------------------------------------------------------
+Traceback (most recent call last):
+  File "labs/testing/test_textlib.py", line 20, in test_single_sentence
+    para = Paragraph("Hello there.")
+NameError: name 'Paragraph' is not defined
+----
+
+This is a bug in the test code, because it doesn't import "Paragraph"
+properly. In contrast, a meaningful failure looks more like this:
+
+----
+FAIL: test_single_sentence (test_textlib.TestParagraph)
+----------------------------------------------------------------
+Traceback (most recent call last):
+  File "labs/testing/test_textlib.py", line 21, in test_single_sentence
+    self.assertEqual(1, para.num_sentences())
+AssertionError: 1 != 0
+----
+
+Once you have the tests written correctly, your output will
+include several failed-assertion blocks - for example:
+
+----
+================================================================
+FAIL: test_several_sentences (test_textlib.TestParagraph)
+----------------------------------------------------------------
+Traceback (most recent call last):
+  File "labs/testing/test_textlib.py", line 35, in test_several_sentences
+    self.assertEqual(5, para.num_sentences())
+AssertionError: 5 != -1
+----
+
+
+# STEP 4
+
+Make the tests pass for your expanded "test_textlib.py", by
+implementing "Paragraph.num_paragraphs()" in "textlib.py".
+
+Congratulations. You're done!
+
+
+# EXTRA CREDIT
+
+(NOTE: If you are using Python 3, I recommend you pause here, and go
+to "lab-subtests.txt", so you can get practice with subtests. Once
+you've completed that, you can come to this lab and continue. If you
+are using Python 2, just keep going in this lab.)
+
+1) Think of some other possible invalid inputs to "Paragraph" or
+"BodyOfText": a string consisting of just whitespace, a multi-line
+string with no words, etc. Use test-driven development to ensure
+"ValueError" is raised for these inputs.
+
+2) Add some additional tests in the vein of
+"TestParagraph.test_several_sentences", for the following sentences
+below. For each one, follow the test-driven development cycle. Add the
+new assertion, and run the test; watch it fail. Once you see that,
+make it pass by implementing new logic in the "Paragraph"
+class. Include the following one-sentence paragraphs:
+
+  * "My favorite website is docs.python.org, with reddit.com a close second."
+  * "I bought a basket of fruit for Mrs. Smith's birthday."
+  * "I will arrive between 6 a.m. and 7 a.m."
+  * "Your total is $10.43."
+
+And the following multi-sentence paragraphs:
+
+  * "Yay! We made it. High five!" (3 sentences)
+  * "Did you tell Mr. Burke yesterday? We're bringing the birthday
+    cake tomorrow." (2 sentences)
